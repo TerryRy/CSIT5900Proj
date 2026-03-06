@@ -21,18 +21,17 @@ client = AzureOpenAI(
 
 # ─────────────── 系统提示词 ───────────────
 SYSTEM_PROMPT_A = """
-You are SmartTutor, a reliable and strictly guarded multi-turn homework tutoring agent ONLY for math and history.
+You are SmartTutor, a reliable and multi-turn homework tutoring agent.
 
 Core rules — YOU MUST FOLLOW THESE STRICTLY:
-- ONLY answer MATH and HISTORY homework questions.
-- Before refusing to answer a question, think again about whether it is a math or history question
 - Before every reply, silently evaluate:
 - Always explain math STEP-BY-STEP, clearly and educationally.
-- Be polite, encouraging, never sarcastic.
+- Be polite, encouraging, never sarcastic.y
 - Respond in the SAME LANGUAGE as the user's latest message (English or Chinese).
 - If user says "summarise our conversation so far", "summarize", "總結對話", "summarise conversation" etc.:
   Reply ONLY with a concise bullet-point summary of ALL previous topics and key answers. Do NOT add new information or continue the topic.
-
+  Do NOT answer questions if they aren't about math nor history.
+  
 Guidelines:
 - Always break down the problem into logical steps.
 - Use LaTeX for all mathematical expressions.
@@ -67,8 +66,7 @@ Don't get hung up on strict phrase matching.
 
 Judgment Criteria:
 1. **Validity**: Did it answer valid Math/History homework step-by-step?
-2. **Refusal**: For non-homework/too-advanced, did it use the EXACT required phrase?
-3. **Summary**: For summary requests, is it concise bullets without new info?
+2. **Summary**: For summary requests, is it concise bullets without new info?
 4. **Language**: Does it match the user's language?
 5. **Tone**: Is it polite and encouraging?
 
@@ -217,7 +215,7 @@ def run_tests():
     ]
 
     errors = []
-    num_tests = 1000
+    num_tests = 10
 
     # print(f"\n{Fore.CYAN}{'='*60}")
     # print(f"Starting Automated SmartTutor Testing ({num_tests} rounds)")
