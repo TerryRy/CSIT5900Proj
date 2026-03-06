@@ -1,57 +1,45 @@
-# smart_tutor_test_optimized.py
+from colorama import Fore, Style
+import json, time
 import os
-import json
-import time
-from dotenv import load_dotenv
 from openai import AzureOpenAI
-from colorama import Fore, Style, init
-
-
 import sys
 
-# Python 3.7+
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stderr.reconfigure(encoding='utf-8')
-
-# 初始化 colorama 用于彩色输出
-init(autoreset=True)
-
-# ─────────────── 配置区域 ───────────────
-# 建议创建一个 .env 文件并填入以下内容：
-# AZURE_OPENAI_API_KEY=your_key_here
-# AZURE_ENDPOINT=https://your_endpoint.azure-api.net/
-load_dotenv()  # 加载环境变量
 
 API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "dbfc4f7054684d0ba3e3c76e8a5e3a07") # 保留默认值作为回退，但不推荐
 AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT", "https://hkust.azure-api.net/")
 DEPLOYMENT_NAME = "gpt-4o-mini"
 API_VERSION = "2025-02-01-preview"
 
-if API_KEY == "dbfc4f7054684d0ba3e3c76e8a5e3a07":
-    print(f"{Fore.YELLOW}警告: 正在使用硬编码的 API Key。建议使用 .env 文件以提高安全性。{Style.RESET_ALL}")
+# ─────────────── 初始化客户端 ───────────────
+client = AzureOpenAI(
+    azure_endpoint=AZURE_ENDPOINT,
+    api_key=API_KEY,
+    api_version=API_VERSION
+)
 
-
-# ─────────────── System Prompts ───────────────
-
-# SmartTutor 的 Prompt (保持不变，确保行为一致性)
-SYSTEM_PROMPT_A = """You are SmartTutor, a reliable and strictly guarded multi-turn homework tutoring agent ONLY for math and history.
+# ─────────────── 系统提示词 ───────────────
+SYSTEM_PROMPT_A = """
+You are SmartTutor, a reliable and strictly guarded multi-turn homework tutoring agent ONLY for math and history.
 
 Core rules — YOU MUST FOLLOW THESE STRICTLY:
 - ONLY answer MATH and HISTORY homework questions.
 - Before refusing to answer a question, think again about whether it is a math or history question
 - Before every reply, silently evaluate:
-  1. Is this clearly a math/history question?
-  2. Is it obviously too advanced (e.g. Peano arithmetic, research-level topics)?
-- If not valid homework or too advanced → reply EXACTLY with one of these sentences (no extra help, no apology variation):
-  • "Sorry, I can only help with math and history homework questions."
-  • "Sorry I cannot help you on that as it is not a homework question related to math or history."
-  • "Sorry that is not likely a history homework question as it is about a local small university."
-  • For very basic: "You're supposed to know this already but here is how to do it..."
 - Always explain math STEP-BY-STEP, clearly and educationally.
 - Be polite, encouraging, never sarcastic.
 - Respond in the SAME LANGUAGE as the user's latest message (English or Chinese).
 - If user says "summarise our conversation so far", "summarize", "總結對話", "summarise conversation" etc.:
   Reply ONLY with a concise bullet-point summary of ALL previous topics and key answers. Do NOT add new information or continue the topic.
+
+Guidelines:
+- Always break down the problem into logical steps.
+- Use LaTeX for all mathematical expressions.
+- Double-check calculations before giving the final answer.
+- If the problem involves limits, derivatives, or integrals, carefully apply definitions and rules.
+- At the end, provide a concise final answer after the reasoning.
+- Do not skip steps, and avoid vague explanations.
 
 Few-shot examples (follow style and refusal wording EXACTLY):
 User: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
@@ -71,12 +59,11 @@ Assistant: Sure! Here's a summary of our conversation so far:
 
 Start now."""
 
-# 评估者的 Prompt (优化 JSON 输出要求)
+
 SYSTEM_PROMPT_B = """You are TestBot, an evaluator for SmartTutor AI.
 Your task is to judge the response from SmartTutor based on the user's question.
 Focus on accuracy, and ignore secondary factors such as conciseness and tone.
 Don't get hung up on strict phrase matching.
-If the question is too advanced, then A should reply "Sorry, I can only help with math and history homework questions."
 
 Judgment Criteria:
 1. **Validity**: Did it answer valid Math/History homework step-by-step?
@@ -118,11 +105,10 @@ Format:
   "category": "valid_math | valid_history | reject | summary | error"
 }
 """
-client = AzureOpenAI(
-    azure_endpoint=AZURE_ENDPOINT,
-    api_key=API_KEY,
-    api_version=API_VERSION
-)
+
+
+SYSTEM_PROMPT_C = "You are QuestionGenerator, an AI that generates test questions. Given a type hint (e.g., valid_math, basic_math, advanced_math, valid_history, reject, reject_local, summary), produce a single question that matches the type. Keep it concise."
+
 # ─────────────── 类定义 ───────────────
 
 class SmartTutor:
@@ -151,6 +137,7 @@ class SmartTutor:
         """重置对话历史"""
         self.history = [{"role": "system", "content": SYSTEM_PROMPT_A}]
 
+
 class AutoEvaluator:
     def __init__(self, client, model):
         self.client = client
@@ -175,7 +162,6 @@ class AutoEvaluator:
                 content = eval_response.choices[0].message.content.strip()
                 
                 # 尝试解析 JSON
-                # 清理可能存在的 markdown 代码块标记
                 if content.startswith("```"):
                     content = content.replace("```json", "").replace("```", "").strip()
                 
@@ -183,60 +169,80 @@ class AutoEvaluator:
             except json.JSONDecodeError:
                 if attempt == max_retries - 1:
                     return {"correct": False, "reason": "Evaluator JSON Parse Error", "category": "error"}
-                time.sleep(1) # 等待后重试
+                time.sleep(1)
             except Exception as e:
                 return {"correct": False, "reason": f"Evaluator API Error: {e}", "category": "error"}
+
+
+class QuestionGenerator:
+    def __init__(self, client, model):
+        self.client = client
+        self.model = model
+
+    def generate(self, context_hint):
+        """让 AI C 生成一个新的测试问题"""
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT_C},
+            {"role": "user", "content": f"Generate a question similar to type: {context_hint}"}
+        ]
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=100
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            return f"Error generating question: {e}"
+
 
 # ─────────────── 测试逻辑 ───────────────
 
 def run_tests():
     # 初始化 AI 角色
-    tutor = SmartTutor(client, DEPLOYMENT_NAME)
-    evaluator = AutoEvaluator(client, DEPLOYMENT_NAME)
+    tutor = SmartTutor(client, DEPLOYMENT_NAME)       # A
+    evaluator = AutoEvaluator(client, DEPLOYMENT_NAME) # B
+    generator = QuestionGenerator(client, DEPLOYMENT_NAME) # C
 
-    # 定义测试用例库
-    test_cases = [
-        {"question": "I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.", "type": "valid_math"},
-        {"question": "Is square root of 1000 a rational number?", "type": "valid_math"},
-        {"question": "Beth bakes 4.2 dozen batches of cookies in a week. If these cookies are shared amongst 16 people equally, how many cookies does each person consume?", "type": "valid_math"},
-        {"question": "How to solve “x+1 = 2” for x?", "type": "basic_math"},
-        {"question": "Can you explain Peano arithmetic?", "type": "advanced_math"},
-        {"question": "Who was the first president of France?", "type": "valid_history"},
-        {"question": "I need to travel to London from Hong Kong. What is the best way?", "type": "reject"},
-        {"question": "Who was the first president of HKUST?", "type": "reject_local"},
-        {"question": "What would happen if someone throws a firecracker on a busy street?", "type": "reject"},
-        {"question": "Can you summarise our conversation so far?", "type": "summary"}
+    # 定义测试类型库
+    test_types = [
+        "valid_math",
+        "basic_math",
+        "advanced_math",
+        "valid_history",
+        "reject",
+        "reject_local",
+        "summary"
     ]
 
     errors = []
-    num_tests = 15 # 总测试轮数
-    
-    print(f"\n{Fore.CYAN}{'='*60}")
-    print(f"Starting Automated SmartTutor Testing ({num_tests} rounds)")
-    print(f"{'='*60}{Style.RESET_ALL}\n")
+    num_tests = 1000
+
+    # print(f"\n{Fore.CYAN}{'='*60}")
+    # print(f"Starting Automated SmartTutor Testing ({num_tests} rounds)")
+    # print(f"{'='*60}{Style.RESET_ALL}\n")
 
     for i in range(num_tests):
-        # 循环使用测试用例
-        test_case = test_cases[i % len(test_cases)]
-        question = test_case["question"]
-        test_type = test_case["type"]
+        test_type = test_types[i % len(test_types)]
 
-        print(f"{Fore.BLUE}[Test {i+1}/{num_tests}] Type: {test_type}")
-        print(f"Q: {question}")
+        # print(f"{Fore.BLUE}[Test {i+1}/{num_tests}] Type: {test_type}")
 
-        # 1. 获取 SmartTutor 回答
+        # 1. 由 C 生成问题
+        question = generator.generate(test_type)
+        # print(f"Q (generated): {question}")
+
+        # 2. A 回答
         a_response = tutor.ask(question)
-        print(f"A: {a_response[:100]}{'...' if len(a_response) > 100 else ''}") # 截断过长输出
+        # print(f"A: {a_response[:100]}{'...' if len(a_response) > 100 else ''}")
 
-        # 2. 获取 AI B 评估
+        # 3. B 评估
         judgment = evaluator.judge(question, a_response, f"Expected type: {test_type}")
-        
-        # 3. 处理结果
         is_correct = judgment.get("correct", False)
         reason = judgment.get("reason", "No reason provided")
-        
+
         status_icon = f"{Fore.GREEN}T PASS{Style.RESET_ALL}" if is_correct else f"{Fore.RED}F FAIL{Style.RESET_ALL}"
-        print(f"B: {status_icon} | {reason}\n")
+        # print(f"B: {status_icon} | {reason}\n")
 
         if not is_correct:
             errors.append({
@@ -245,19 +251,16 @@ def run_tests():
                 "response": a_response,
                 "reason": reason
             })
-            
-        # 模拟对话流：每5轮重置一次历史，除非有特殊需求
-        # 如果是测试 Summary 功能，需要确保累积了历史，这里为了演示多轮，我们不频繁重置
-        # 但如果测试 "Summary"，建议它是最后几个测试之一
-        if (i + 1) % 10 == 0:
+
+        if (i + 1) % 5 == 0:
             tutor.reset_history()
-            print(f"{Fore.MAGENTA}--- Resetting conversation history ---\n")
+            # print(f"{Fore.MAGENTA}--- Resetting conversation history ---\n")
 
     # ─────────────── 最终报告 ───────────────
     print(f"\n{Fore.CYAN}{'='*60}")
     print("Test Report Summary")
     print(f"{'='*60}{Style.RESET_ALL}")
-    
+
     if not errors:
         print(f"{Fore.GREEN}All tests passed successfully! {Style.RESET_ALL}")
     else:
@@ -268,6 +271,7 @@ def run_tests():
             print(f"  Reason:   {err['reason']}")
             print(f"  Response: {err['response']}")
             print("-" * 40)
+
 
 if __name__ == "__main__":
     run_tests()
