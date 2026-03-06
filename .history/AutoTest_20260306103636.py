@@ -145,12 +145,11 @@ def run_automated_tests(num_tests=10, multi_turn=True):
         try:
             import json
             judg_dict = json.loads(judgment.split('\n')[1])
-            print("CASE")
             if not judg_dict.get("correct", True):
                 errors.append({"question": question, "a_response": a_response, "reason": judg_dict.get("reason", "Unknown")})
         except:
             print("Warning: B's judgment not valid JSON.")
-            print(judgment.split('\n')[1])
+            print(judgment)
 
         # If multi-turn, continue building history; else reset
         if not multi_turn:

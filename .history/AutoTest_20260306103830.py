@@ -145,7 +145,7 @@ def run_automated_tests(num_tests=10, multi_turn=True):
         try:
             import json
             judg_dict = json.loads(judgment.split('\n')[1])
-            print("CASE")
+            p
             if not judg_dict.get("correct", True):
                 errors.append({"question": question, "a_response": a_response, "reason": judg_dict.get("reason", "Unknown")})
         except:

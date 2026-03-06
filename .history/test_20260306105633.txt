@@ -1,0 +1,10 @@
+警告: 正在使用硬编码的 API Key。建议使用 .env 文件以提高安全性。
+
+============================================================
+Starting Automated SmartTutor Testing (15 rounds)
+============================================================
+
+[Test 1/15] Type: valid_math
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: The distance between two cities is typically calculated using the straight-line distance, also known...
+B: 

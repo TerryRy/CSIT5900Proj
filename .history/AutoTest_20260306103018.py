@@ -53,26 +53,12 @@ Assistant: Sure! Here's a summary of our conversation so far:
 
 Start now."""
 
-# ─────────────── System Prompt for AI B (Tester/Evaluator) ───────────────
-system_prompt_b = """You are TestBot, an evaluator for SmartTutor AI. Your job is to:
-1. Generate test questions based on the project requirements (math/history homework, rejections, summaries).
-2. After getting a response from SmartTutor (A), judge if it's correct based on guardrails:
-   - Valid math/history: Detailed, step-by-step if math; factual for history.
-   - Rejections: Exact match to one of the refusal phrases.
-   - Summaries: Concise bullet points only, no new info.
-   - Language: Matches user's language.
-   - Politeness: Always encouraging.
-3. Output judgment as JSON: {"correct": true/false, "reason": "brief explanation"}.
-   If false, explain why (e.g., "Wrong refusal phrase" or "Answered non-homework question").
-
-Reference project examples for expected behaviors."""
-# ────────────────────────────────────────────────────────────────────────
-
 client = AzureOpenAI(
     azure_endpoint=AZURE_ENDPOINT,
     api_key=API_KEY,
     api_version=API_VERSION
 )
+
 
 # Function to get response from AI A (SmartTutor)
 def get_a_response(messages_a):
@@ -144,13 +130,11 @@ def run_automated_tests(num_tests=10, multi_turn=True):
         # Parse judgment (assuming JSON)
         try:
             import json
-            judg_dict = json.loads(judgment.split('\n')[1])
-            print("CASE")
+            judg_dict = json.loads(judgment)
             if not judg_dict.get("correct", True):
                 errors.append({"question": question, "a_response": a_response, "reason": judg_dict.get("reason", "Unknown")})
         except:
             print("Warning: B's judgment not valid JSON.")
-            print(judgment.split('\n')[1])
 
         # If multi-turn, continue building history; else reset
         if not multi_turn:
