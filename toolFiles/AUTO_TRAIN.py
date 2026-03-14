@@ -16,6 +16,14 @@ init(autoreset=True)
 # ─────────────── 配置区域 ───────────────
 load_dotenv()  # 加载环境变量
 
+# 加载 System Prompts
+def load_prompt(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return f.read().strip()
+    else:
+        raise FileNotFoundError(f"Prompt file not found: {file_path}")
+
 API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "dbfc4f7054684d0ba3e3c76e8a5e3a07")
 AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT", "https://hkust.azure-api.net/")
 DEPLOYMENT_NAME = "gpt-4o-mini"
@@ -24,16 +32,8 @@ API_VERSION = "2025-02-01-preview"
 if API_KEY == "dbfc4f7054684d0ba3e3c76e8a5e3a07":
     print(f"{Fore.YELLOW}警告: 正在使用硬编码的 API Key。建议使用 .env 文件以提高安全性。{Style.RESET_ALL}")
 
-# 加载 System Prompts 从文件
-def load_prompt(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return f.read().strip()
-    else:
-        raise FileNotFoundError(f"Prompt file not found: {file_path}")
-
-SYSTEM_PROMPT_A = load_prompt("./system_prompt_a.txt")
-SYSTEM_PROMPT_B = load_prompt("./system_prompt_b.txt")
+SYSTEM_PROMPT_A = load_prompt("../system_prompt_a.txt")
+SYSTEM_PROMPT_B = load_prompt("../system_prompt_b.txt")
 # 假设 SYSTEM_PROMPT_C 是硬编码的或从文件加载；这里作为占位符
 SYSTEM_PROMPT_C = """Your system prompt for Agent C as a placeholder. Customize to evaluate B's questions and judgments, and update prompts."""
 
