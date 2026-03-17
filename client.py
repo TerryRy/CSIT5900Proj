@@ -1,5 +1,9 @@
 from openai import AzureOpenAI
 import os
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv()
 
 class AzureOpenAIClient:
     def __init__(self):
