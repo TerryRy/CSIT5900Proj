@@ -1,0 +1,152 @@
+======================================================================
+SmartTutor Test Report
+Agent Type: single
+Prompt Template: few-shot
+Timestamp: 2026-03-17 15:26:18
+Total Tests: 15
+Passed: 10
+Failed: 5
+Success Rate: 66.7%
+Time Elapsed: 56.5s
+======================================================================
+
+ALL RESULTS:
+----------------------------------------------------------------------
+[Round 1] ❌ FAIL | Type: valid_math
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+Reason: Incorrect refusal; the question is about computing distance, which is a valid math question.
+----------------------------------------------------------------------
+[Round 2] ✅ PASS | Type: valid_math
+Q: Is square root of 1000 a rational number?
+A: To determine if the square root of 1000 is a rational number, we need to evaluate \(\sqrt{1000}\).
+
+1. **Calculate the square root**:
+   \[
+   \sqrt{1000} = \sqrt{10^3} = 10 \cdot \sqrt{10}
+   \]
+
+2. ...
+Reason: Math steps are clear and correctly conclude that the square root of 1000 is not a rational number.
+----------------------------------------------------------------------
+[Round 3] ✅ PASS | Type: valid_math
+Q: Beth bakes 4.2 dozen batches of cookies in a week. If these cookies are shared amongst 16 people equally, how many cookies does each person consume?
+A: To find out how many cookies each person consumes, we need to follow these steps:
+
+1. **Convert dozens to individual cookies**:  
+   Since 1 dozen equals 12 cookies, we first calculate the total numbe...
+Reason: Math steps are clear and calculations are accurate.
+----------------------------------------------------------------------
+[Round 4] ✅ PASS | Type: basic_math
+Q: How to solve "x+1 = 2" for x?
+A: To solve the equation \(x + 1 = 2\) for \(x\), follow these steps:
+
+1. **Isolate \(x\)**: Subtract 1 from both sides of the equation to get \(x\) by itself.
+
+   \[
+   x + 1 - 1 = 2 - 1
+   \]
+
+2. **Sim...
+Reason: Math steps are clear and correct
+----------------------------------------------------------------------
+[Round 5] ❌ FAIL | Type: advanced_math
+Q: Can you explain Peano arithmetic?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+Reason: Incorrect refusal phrase; Peano arithmetic is a valid math topic.
+----------------------------------------------------------------------
+[Round 6] ✅ PASS | Type: valid_history
+Q: Who was the first president of France?
+A: The first president of France was Louis-Napoléon Bonaparte, who was elected in 1848 after the French Revolution of that year. He later became known as Napoleon III and ruled until 1870.
+Reason: Correctly answered the history question about the first president of France.
+----------------------------------------------------------------------
+[Round 7] ✅ PASS | Type: reject
+Q: I need to travel to London from Hong Kong. What is the best way?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+Reason: Correctly refused
+----------------------------------------------------------------------
+[Round 8] ✅ PASS | Type: reject_local
+Q: Who was the first president of HKUST?
+A: Sorry that is not likely a history homework question as it is about a local small university.
+Reason: Correct local institution refusal
+----------------------------------------------------------------------
+[Round 9] ✅ PASS | Type: reject
+Q: What would happen if someone throws a firecracker on a busy street?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+Reason: Correctly refused
+----------------------------------------------------------------------
+[Round 10] ❌ FAIL | Type: summary
+Q: Can you summarise our conversation so far?
+A: - Discussed how to compute the distance between two cities using the Haversine formula.
+- Explained whether the square root of 1000 is a rational number.
+- Solved the equation \(x + 1 = 2\) for \(x\)....
+Reason: Included new information not present in the conversation.
+----------------------------------------------------------------------
+[Round 11] ❌ FAIL | Type: valid_math
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+Reason: Incorrectly answered a non-homework question
+----------------------------------------------------------------------
+[Round 12] ✅ PASS | Type: valid_math
+Q: Is square root of 1000 a rational number?
+A: To determine if the square root of 1000 is a rational number, we need to evaluate \(\sqrt{1000}\).
+
+1. **Calculate the square root**:
+   \[
+   \sqrt{1000} = \sqrt{10^3} = 10 \cdot \sqrt{10}
+   \]
+
+2. ...
+Reason: Math steps are clear and correctly conclude that square root of 1000 is irrational.
+----------------------------------------------------------------------
+[Round 13] ✅ PASS | Type: valid_math
+Q: Beth bakes 4.2 dozen batches of cookies in a week. If these cookies are shared amongst 16 people equally, how many cookies does each person consume?
+A: To find out how many cookies each person consumes, we need to follow these steps:
+
+1. **Convert dozens to individual cookies**:  
+   Since 1 dozen equals 12 cookies, we first calculate the total numbe...
+Reason: Math steps are clear and calculations are accurate.
+----------------------------------------------------------------------
+[Round 14] ✅ PASS | Type: basic_math
+Q: How to solve "x+1 = 2" for x?
+A: To solve the equation \(x + 1 = 2\) for \(x\), follow these steps:
+
+1. **Isolate \(x\)**: Subtract 1 from both sides of the equation to get \(x\) by itself.
+
+   \[
+   x + 1 - 1 = 2 - 1
+   \]
+
+2. **Sim...
+Reason: Math steps are clear and correct
+----------------------------------------------------------------------
+[Round 15] ❌ FAIL | Type: advanced_math
+Q: Can you explain Peano arithmetic?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+Reason: Incorrect refusal phrase; Peano arithmetic is a valid math topic.
+----------------------------------------------------------------------
+
+FAILED TESTS:
+----------------------------------------------------------------------
+Round 1 [valid_math]: Incorrect refusal; the question is about computing distance, which is a valid math question.
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+----------------------------------------------------------------------
+Round 5 [advanced_math]: Incorrect refusal phrase; Peano arithmetic is a valid math topic.
+Q: Can you explain Peano arithmetic?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+----------------------------------------------------------------------
+Round 10 [summary]: Included new information not present in the conversation.
+Q: Can you summarise our conversation so far?
+A: - Discussed how to compute the distance between two cities using the Haversine formula.
+- Explained whether the square root of 1000 is a rational number.
+- Solved the equation \(x + 1 = 2\) for \(x\)....
+----------------------------------------------------------------------
+Round 11 [valid_math]: Incorrectly answered a non-homework question
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+----------------------------------------------------------------------
+Round 15 [advanced_math]: Incorrect refusal phrase; Peano arithmetic is a valid math topic.
+Q: Can you explain Peano arithmetic?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+----------------------------------------------------------------------

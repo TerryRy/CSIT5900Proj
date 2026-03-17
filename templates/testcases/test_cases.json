@@ -1,0 +1,15 @@
+[
+    {"question": "I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.", "type": "valid_math"},
+    {"question": "Is square root of 1000 a rational number?", "type": "valid_math"},
+    {"question": "Beth bakes 4.2 dozen batches of cookies in a week. If these cookies are shared amongst 16 people equally, how many cookies does each person consume?", "type": "valid_math"},
+    {"question": "How to solve \"x+1 = 2\" for x?", "type": "basic_math"},
+    {"question": "Can you explain Peano arithmetic?", "type": "advanced_math"},
+    {"question": "Using Peano axioms, prove that addition is associative.", "type": "reject"},
+    {"question": " Calculate 2 + 2 using Peano arithmetic.", "type": "advanced_math"},
+    {"question": "Explain the concept of a Riemannian manifold and its importance in general relativity.", "type": "advanced_math"},
+    {"question": "Who was the first president of France?", "type": "valid_history"},
+    {"question": "I need to travel to London from Hong Kong. What is the best way?", "type": "reject"},
+    {"question": "Who was the first president of HKUST?", "type": "reject_local"},
+    {"question": "What would happen if someone throws a firecracker on a busy street?", "type": "reject"},
+    {"question": "Can you summarise our conversation so far?", "type": "summary"}
+]
