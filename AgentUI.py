@@ -1,4 +1,3 @@
-# AgentUI.py
 import gradio as gr
 import os
 import argparse
@@ -10,11 +9,12 @@ load_dotenv()
 
 # Import Agent architectures
 from Agents import SmartTutor, TwoAgentSystem
+from Agents.EmbAgent import EmbAgent
 
 # ========== command lines ==========
 parser = argparse.ArgumentParser(description='SmartTutor UI - Math & History Tutor')
-parser.add_argument('--agent', type=str, default='single', choices=['single', 'two'],
-                    help='Agent architecture: single or two')
+parser.add_argument('--agent', type=str, default='emb', choices=['single', 'two', 'emb'],
+                    help='Agent architecture: single, two, or emb')
 parser.add_argument('--manager', action='store_true', help='Enable conversation manager')
 parser.add_argument('--examples', action='store_true', help='Enable examples')
 args = parser.parse_args()
@@ -29,7 +29,8 @@ PROMPT_PATH = os.getenv("SYSTEM_PROMPT_PATH", "./templates/basic_prompts/few_sho
 CORRECTOR_PATH = os.getenv("CORRECTOR_PROMPT_PATH", "./templates/testcases/corrector.txt")
 EXAMPLE_FILE_PATH = os.getenv("EXAMPLES_FILE_PATH") if USE_EXAMPLES else None
 print("-----------Using Prompt Template:------------", PROMPT_PATH)
-print("-----------Using Corrctor Template:------------", CORRECTOR_PATH)
+print("-----------Using Corrector Template:------------", CORRECTOR_PATH)
+
 # ========== Conversation Manager ==========
 if ENABLE_CONVERSATION_MANAGER:
     try:
@@ -42,8 +43,11 @@ if ENABLE_CONVERSATION_MANAGER:
 if AGENT_TYPE == 'single':
     agent = SmartTutor()
     agent.load_prompt(PROMPT_PATH)
-else:  # two
+elif AGENT_TYPE == 'two':
     agent = TwoAgentSystem(PROMPT_PATH, CORRECTOR_PATH)
+else:  # emb
+    agent = EmbAgent()
+    agent.load_prompt(PROMPT_PATH)
 
 # ========== Load Examples ==========
 def load_examples_from_file():
@@ -65,10 +69,12 @@ def chat_function(message, history):
     
     if AGENT_TYPE == 'single':
         response = agent.chat(message, history)
-    else:
+    elif AGENT_TYPE == 'two':
         # Two agent system returns dict with response
         result = agent.run(message)
         response = result.get("response", "")
+    else:  # emb
+        response = agent.chat(message, history)
     
     if ENABLE_CONVERSATION_MANAGER:
         conversation_mgr.update_topic(message, response)
