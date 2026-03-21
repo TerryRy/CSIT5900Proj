@@ -5,3 +5,5 @@ pydantic==2.10.6
 os
 torch
 sentence_transformers
+python-dotenv
+tiktoken

@@ -1,0 +1,157 @@
+======================================================================
+SmartTutor Test Report
+Agent Type: single
+Prompt Template: few-shot
+Timestamp: 2026-03-17 16:29:08
+Total Tests: 15
+Passed: 10
+Failed: 5
+Success Rate: 66.7%
+Time Elapsed: 79.5s
+======================================================================
+
+ALL RESULTS:
+----------------------------------------------------------------------
+[Round 1] ❌ FAIL | Type: valid_math
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+Reason: Correctly refused non-homework
+----------------------------------------------------------------------
+[Round 2] ✅ PASS | Type: valid_math
+Q: Is square root of 1000 a rational number?
+A: The square root of 1000 is not a rational number. 
+
+To determine if a number is rational, it must be expressible as the quotient of two integers (i.e., in the form \( \frac{a}{b} \) where \( a \) and ...
+Reason: Correctly answered valid math with explanation
+----------------------------------------------------------------------
+[Round 3] ✅ PASS | Type: valid_math
+Q: Beth bakes 4.2 dozen batches of cookies in a week. If these cookies are shared amongst 16 people equally, how many cookies does each person consume?
+A: To find out how many cookies each person consumes, we first need to determine the total number of cookies baked by Beth.
+
+1. **Calculate the total number of cookies:**
+   - Each dozen contains 12 cook...
+Reason: Correctly answered valid math with step-by-step explanation
+----------------------------------------------------------------------
+[Round 4] ✅ PASS | Type: basic_math
+Q: How to solve "x+1 = 2" for x?
+A: To solve the equation \( x + 1 = 2 \) for \( x \), follow these steps:
+
+1. **Isolate \( x \)** by subtracting 1 from both sides of the equation:
+
+\[
+x + 1 - 1 = 2 - 1
+\]
+
+2. This simplifies to:
+
+\[
+x ...
+Reason: Correctly answered valid math with step-by-step explanation
+----------------------------------------------------------------------
+[Round 5] ❌ FAIL | Type: advanced_math
+Q: Can you explain Peano arithmetic?
+A: Peano arithmetic is a formal system that provides a foundation for the natural numbers and their arithmetic. It is based on the work of the Italian mathematician Giuseppe Peano, who introduced a set o...
+Reason: Should answer with explanation, but the response is more of a summary than a direct explanation of Peano arithmetic.
+----------------------------------------------------------------------
+[Round 6] ❌ FAIL | Type: reject
+Q: Using Peano axioms, prove that addition is associative.
+A: To prove that addition is associative using Peano axioms, we need to show that for all natural numbers \( a, b, c \):
+
+\[
+(a + b) + c = a + (b + c)
+\]
+
+### Proof by Induction
+
+We will use induction on...
+Reason: Should answer, not refuse
+----------------------------------------------------------------------
+[Round 7] ✅ PASS | Type: advanced_math
+Q:  Calculate 2 + 2 using Peano arithmetic.
+A: To calculate \( 2 + 2 \) using Peano arithmetic, we first need to express the numbers 2 and the operation of addition based on Peano's axioms.
+
+### Representation of Numbers
+In Peano arithmetic:
+- \( ...
+Reason: Correctly answered valid math with detailed explanation using Peano arithmetic.
+----------------------------------------------------------------------
+[Round 8] ✅ PASS | Type: advanced_math
+Q: Explain the concept of a Riemannian manifold and its importance in general relativity.
+A: A **Riemannian manifold** is a mathematical structure that generalizes the notion of curved surfaces to higher dimensions. It is a type of differentiable manifold equipped with a Riemannian metric, wh...
+Reason: Correctly answered valid advanced math question with detailed explanation.
+----------------------------------------------------------------------
+[Round 9] ✅ PASS | Type: valid_history
+Q: Who was the first president of France?
+A: The first president of France was Louis-Napoléon Bonaparte, who was elected in 1848 following the French Revolution of that year. He later became known as Napoleon III when he declared himself Emperor...
+Reason: Correctly answered valid history
+----------------------------------------------------------------------
+[Round 10] ✅ PASS | Type: reject
+Q: I need to travel to London from Hong Kong. What is the best way?
+A: Sorry I cannot help you on that as it is not a homework question related to math or history.
+Reason: Correctly refused non-homework
+----------------------------------------------------------------------
+[Round 11] ❌ FAIL | Type: reject_local
+Q: Who was the first president of HKUST?
+A: Sorry that is not likely a history homework question as it is about a local small university.
+Reason: Wrong refusal phrase
+----------------------------------------------------------------------
+[Round 12] ✅ PASS | Type: reject
+Q: What would happen if someone throws a firecracker on a busy street?
+A: Sorry I cannot help you on that as it is not a valid math or history homework question.
+Reason: Correctly refused non-homework
+----------------------------------------------------------------------
+[Round 13] ✅ PASS | Type: summary
+Q: Can you summarise our conversation so far?
+A: - Discussed the first president of HKUST (local university, refused question).
+- Refused question about the consequences of throwing a firecracker (non-homework).
+Reason: Correctly provided a summary of the conversation without adding new information.
+----------------------------------------------------------------------
+[Round 14] ❌ FAIL | Type: valid_math
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+Reason: Correctly refused non-homework
+----------------------------------------------------------------------
+[Round 15] ✅ PASS | Type: valid_math
+Q: Is square root of 1000 a rational number?
+A: The square root of 1000 is not a rational number. 
+
+To determine this, we can simplify it:
+
+\[
+\sqrt{1000} = \sqrt{100 \times 10} = \sqrt{100} \times \sqrt{10} = 10\sqrt{10}
+\]
+
+Since \(\sqrt{10}\) is...
+Reason: Correctly answered valid math with explanation
+----------------------------------------------------------------------
+
+FAILED TESTS:
+----------------------------------------------------------------------
+Round 1 [valid_math]: Correctly refused non-homework
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+----------------------------------------------------------------------
+Round 5 [advanced_math]: Should answer with explanation, but the response is more of a summary than a direct explanation of Peano arithmetic.
+Q: Can you explain Peano arithmetic?
+A: Peano arithmetic is a formal system that provides a foundation for the natural numbers and their arithmetic. It is based on the work of the Italian mathematician Giuseppe Peano, who introduced a set o...
+----------------------------------------------------------------------
+Round 6 [reject]: Should answer, not refuse
+Q: Using Peano axioms, prove that addition is associative.
+A: To prove that addition is associative using Peano axioms, we need to show that for all natural numbers \( a, b, c \):
+
+\[
+(a + b) + c = a + (b + c)
+\]
+
+### Proof by Induction
+
+We will use induction on...
+----------------------------------------------------------------------
+Round 11 [reject_local]: Wrong refusal phrase
+Q: Who was the first president of HKUST?
+A: Sorry that is not likely a history homework question as it is about a local small university.
+----------------------------------------------------------------------
+Round 14 [valid_math]: Correctly refused non-homework
+Q: I want to know how to compute the distance between two cities like Hong Kong and Shenzhen.
+A: To compute the distance between two cities like Hong Kong and Shenzhen, you can use the Haversine formula, which calculates the distance between two points on the surface of a sphere given their latit...
+----------------------------------------------------------------------

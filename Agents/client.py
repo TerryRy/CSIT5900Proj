@@ -1,27 +1,25 @@
+# Agents/client.py
 from openai import AzureOpenAI
 import os
 
 class AzureOpenAIClient:
     def __init__(self):
         self.azure_endpoint = os.getenv("AZURE_ENDPOINT")
-        self.api_key = os.getenv("AZURE_API_KEY")
-        self.api_version = os.getenv("AZURE_API_VERSION")
-        self.deployment_name = os.getenv("DEPLOYMENT_NAME")
+        self.api_key = os.getenv("AZURE_OPENAI_API_KEY")
+        self.api_version = os.getenv("API_VERSION", "2025-02-01-preview")
+        self.deployment_name = os.getenv("DEPLOYMENT_NAME", "gpt-4o-mini")
         
         self._validate_config()
-        
         self.client = self._create_client()
 
     def _validate_config(self):
-        required_configs = [
+        required = [
             ("AZURE_ENDPOINT", self.azure_endpoint),
-            ("AZURE_API_KEY", self.api_key),
-            ("AZURE_API_VERSION", self.api_version),
-            ("DEPLOYMENT_NAME", self.deployment_name)
+            ("AZURE_OPENAI_API_KEY", self.api_key)
         ]
-        for config_name, config_value in required_configs:
-            if not config_value:
-                raise ValueError(f"配置项 {config_name} 未设置，请检查config.sh")
+        for name, value in required:
+            if not value:
+                raise ValueError(f"{name} not set in .env")
 
     def _create_client(self):
         return AzureOpenAI(
@@ -30,12 +28,11 @@ class AzureOpenAIClient:
             api_version=self.api_version
         )
 
-    def chat_completion(self, messages, temperature=0.4, max_tokens=1000, stream=False):
+    def chat_completion(self, messages, temperature=0.4, max_tokens=1000):
         response = self.client.chat.completions.create(
             model=self.deployment_name,
             messages=messages,
             temperature=temperature,
-            max_tokens=max_tokens,
-            stream=stream
+            max_tokens=max_tokens
         )
         return response.choices[0].message.content
