@@ -1,6 +1,14 @@
 import gradio as gr
 import os
 from client import AzureOpenAIClient
+from embedder import Embedder
+
+relevance_checker = Embedder(
+    model_name="BAAI/bge-m3",
+    domain_threshold=0.55,
+    summary_threshold=0.4,
+    continuation_threshold=0.1
+)
 
 def load_prompt(prompt_path):
     with open(prompt_path, "r", encoding="utf-8") as f:
@@ -10,6 +18,9 @@ client = AzureOpenAIClient()
 system_prompt = load_prompt(os.getenv("SYSTEM_PROMPT_PATH"))
 
 def chat_function(message, history):
+    if not relevance_checker.is_relevant(message, history):
+        return "Sorry, this SmartTutor only answers math and world history homework questions for college and below. Please ask relevant questions."
+    
     messages = [{"role": "system", "content": system_prompt}]
     
     for user_msg, ai_msg in history:
