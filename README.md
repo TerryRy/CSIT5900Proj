@@ -21,6 +21,8 @@ The project features a modular architecture with clear separation between agents
 - **`SingleAgent.py`** - Basic tutor agent for direct question answering
 - **`TwoAgents.py`** - Dual-agent system with tutor and corrector for self-correction
 - **`client.py`** - Azure OpenAI API client wrapper
+- **`EmbAgent.py`** - Experiment on sematic filtering
+- **`embedder.py`** - Util file for EmbAgent
 
 #### Templates (`templates/`)
 - **`basic_prompts/`** - Three prompt variants (zero-shot, one-shot, few-shot)
@@ -127,4 +129,4 @@ Assistant: Sorry I cannot help you on that as it is not a homework question rela
 
 ## License
 
-For academic and research use only.
+For course project use only.

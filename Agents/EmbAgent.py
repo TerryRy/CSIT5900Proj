@@ -4,7 +4,6 @@ from typing import List, Dict, Any, Optional, Tuple
 from Agents.BaseAgent import BaseAgent
 from .embedder import Embedder
 
-
 class EmbAgent(BaseAgent):
     """Embedding-based agent that checks relevance before answering"""
     

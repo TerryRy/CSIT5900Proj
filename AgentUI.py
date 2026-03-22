@@ -9,11 +9,11 @@ load_dotenv()
 
 # Import Agent architectures
 from Agents import SmartTutor, TwoAgentSystem
-from Agents.EmbAgent import EmbAgent
+# from Agents.EmbAgent import EmbAgent
 
 # ========== command lines ==========
 parser = argparse.ArgumentParser(description='SmartTutor UI - Math & History Tutor')
-parser.add_argument('--agent', type=str, default='emb', choices=['single', 'two', 'emb'],
+parser.add_argument('--agent', type=str, default='single', choices=['single', 'two', 'emb'],
                     help='Agent architecture: single, two, or emb')
 parser.add_argument('--manager', action='store_true', help='Enable conversation manager')
 parser.add_argument('--examples', action='store_true', help='Enable examples')
@@ -46,6 +46,7 @@ if AGENT_TYPE == 'single':
 elif AGENT_TYPE == 'two':
     agent = TwoAgentSystem(PROMPT_PATH, CORRECTOR_PATH)
 else:  # emb
+    pass
     agent = EmbAgent()
     agent.load_prompt(PROMPT_PATH)
 
