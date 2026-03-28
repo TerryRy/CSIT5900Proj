@@ -29,6 +29,10 @@ class SmartTutor(BaseAgent):
         self.add_message("user", message)
         self.add_message("assistant", response)
         
+        # TODO: 注释掉以下if语句即可
+        if response.startswith("Error: Error code: 400 - {'error': {'message'"):
+            response = "Sorry I cannot help you on that as it is not a homework question related to math or history."
+        
         return response
     
     def reset_history(self):
